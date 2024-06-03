@@ -4,6 +4,7 @@
 #include "authwindow.h"
 #include "registerwindow.h"
 #include "client.h"
+#include "imagewindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,8 +37,17 @@ int main(int argc, char *argv[])
 
     QObject::connect(&authWindow, &AuthWindow::showMainWindow, [&]() {
         authWindow.hide();
-        MainWindow *mainWindow = new MainWindow;
+        MainWindow *mainWindow = new MainWindow(&client);
         mainWindow->show();
+    });
+
+    QObject::connect(&client, &Client::imageReceived, [&]() {
+        MainWindow *mainWindow = dynamic_cast<MainWindow *>(client.parent());
+        if (mainWindow) {
+            mainWindow->hide();
+        }
+        ImageWindow *imageWindow = new ImageWindow(&client);
+        imageWindow->show();
     });
 
     loginWindow.show();

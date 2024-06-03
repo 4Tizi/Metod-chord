@@ -3,6 +3,7 @@ QT += widgets network
 CONFIG += c++11
 
 SOURCES += \
+    imagewindow.cpp \
     main.cpp \
     client.cpp \
     loginwindow.cpp \
@@ -12,6 +13,7 @@ SOURCES += \
 
 HEADERS += \
     client.h \
+    imagewindow.h \
     loginwindow.h \
     authwindow.h \
     registerwindow.h \

@@ -14,10 +14,12 @@ public:
     void connectToServer();
     void sendRegistration(const QString &username, const QString &password, const QString &email);
     void sendAuthentication(const QString &username, const QString &password);
+    void sendTextAndImage(const QString &text, const QString &imagePath);
 
 signals:
     void receivedResponse(const QString &response);
     void authenticationSuccess();
+    void imageReceived(const QByteArray &imageData);
 
 private slots:
     void onConnected();
@@ -25,6 +27,7 @@ private slots:
 
 private:
     QTcpSocket *mTcpSocket;
+    QByteArray buffer;
 };
 
 #endif // CLIENT_H
