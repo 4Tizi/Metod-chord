@@ -12,7 +12,7 @@ Client::Client(QObject *parent) : QObject(parent)
 
 void Client::connectToServer()
 {
-    mTcpSocket->connectToHost("localhost", 33333);
+    mTcpSocket->connectToHost("127.0.0.1", 33333);
 }
 
 void Client::sendRegistration(const QString &username, const QString &password, const QString &email)
@@ -38,6 +38,27 @@ void Client::sendRSAtext(const QString &text){
         QString message = QString("rsa&%1").arg(text);
         mTcpSocket->write(message.toUtf8());
         qDebug() << "Sent authentication data to server:" << message;
+    }
+}
+
+void Client::deleteUser(const QString &username){
+    if(mTcpSocket->state() == QAbstractSocket::ConnectedState){
+        QString message = QString("delete&%1").arg(username);
+        mTcpSocket->write(message.toUtf8());
+    }
+}
+
+void Client::makeSqlQuery(const QString &query){
+    if(mTcpSocket->state() == QAbstractSocket::ConnectedState){
+        QString message = QString("sql&%1").arg(query);
+        mTcpSocket->write(message.toUtf8());
+    }
+}
+
+void Client::getUsers(){
+    if(mTcpSocket->state() == QAbstractSocket::ConnectedState){
+        QString message = QString("users");
+        mTcpSocket->write(message.toUtf8());
     }
 }
 
@@ -82,6 +103,9 @@ void Client::onReadyRead()
 
         if (response.contains("Success")) {
             emit authenticationSuccess();
+        }
+        if(response.contains("You are admin")){
+            emit adminSuccess();
         }
 
         buffer.clear();

@@ -16,10 +16,14 @@ public:
     void sendAuthentication(const QString &username, const QString &password);
     void sendTextAndImage(const QString &text, const QString &imagePath);
     void sendRSAtext(const QString &text);
+    void deleteUser(const QString &username);
+    void makeSqlQuery(const QString &query);
+    void getUsers();
 
 signals:
     void receivedResponse(const QString &response);
     void authenticationSuccess();
+    void adminSuccess();
     void imageReceived(const QByteArray &imageData);
 
 private slots:

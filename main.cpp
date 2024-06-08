@@ -5,6 +5,7 @@
 #include "registerwindow.h"
 #include "client.h"
 #include "imagewindow.h"
+#include "adminwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,10 +15,17 @@ int main(int argc, char *argv[])
     LoginWindow loginWindow(&client);
     AuthWindow authWindow(&client);
     RegisterWindow registerWindow(&client);
+    AdminWindow adminWindow(&client);
 
     QObject::connect(&loginWindow, &LoginWindow::showAuthWindow, [&]() {
         loginWindow.hide();
         authWindow.show();
+    });
+
+    QObject::connect(&authWindow, &AuthWindow::showAdminWindow, [&](){
+        authWindow.hide();
+        AdminWindow *adminWindow = new AdminWindow(&client);
+        adminWindow->show();
     });
 
     QObject::connect(&loginWindow, &LoginWindow::showRegisterWindow, [&]() {

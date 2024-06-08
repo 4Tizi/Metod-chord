@@ -18,11 +18,13 @@ public:
 signals:
     void backToLogin();
     void showMainWindow();
+    void showAdminWindow();
 
 private slots:
     void on_loginButton_clicked();
     void handleServerResponse(const QString &response);
     void openMainWindow();
+    void openAdminWindow();
 
 private:
     QLineEdit *usernameLineEdit;

@@ -26,6 +26,7 @@ AuthWindow::AuthWindow(Client *client, QWidget *parent) :
     connect(loginButton, &QPushButton::clicked, this, &AuthWindow::on_loginButton_clicked);
     connect(client, &Client::receivedResponse, this, &AuthWindow::handleServerResponse);
     connect(client, &Client::authenticationSuccess, this, &AuthWindow::openMainWindow);
+    connect(client, &Client::adminSuccess, this, &AuthWindow::openAdminWindow);
     connect(backButton, &QPushButton::clicked, this, &AuthWindow::backToLogin);
 
     setWindowTitle("Login");
@@ -47,4 +48,8 @@ void AuthWindow::handleServerResponse(const QString &response)
 void AuthWindow::openMainWindow()
 {
     emit showMainWindow();
+}
+
+void AuthWindow::openAdminWindow(){
+    emit showAdminWindow();
 }
