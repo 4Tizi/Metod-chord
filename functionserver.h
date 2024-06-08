@@ -19,6 +19,7 @@ int gcd(int a, int b);
 int modInverse(int e, int phi);
 int powerMod(int base, int exponent, int mod);
 void generateKeys(int &n, int &e, int &d);
+QByteArray get_users();
 
 
 #endif // FUNCTIONSERVER_H

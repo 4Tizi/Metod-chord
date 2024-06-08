@@ -2,6 +2,7 @@
 #include "QDebug"
 #include "QFile"
 #include <QBuffer>
+#include <QSqlTableModel>
 #include "QFileInfo"
 #include "database.h"
 // #include "qbuffer.h"
@@ -12,8 +13,6 @@ QByteArray parsing(QByteArray data)//Функция парсинга, получ
     QString data_from_client = QString::fromUtf8(data).trimmed();
     QStringList clue_words = data_from_client.split(QLatin1Char('&'));
     QString action_type = clue_words.front();
-    if (clue_words.length() < 2)
-        return "invalid input\r\n";
     clue_words.pop_front();
     QByteArray res;
     if (action_type == "auth"){
@@ -22,6 +21,22 @@ QByteArray parsing(QByteArray data)//Функция парсинга, получ
     else if (action_type == "reg"){
         res = reg(clue_words.at(0), clue_words.at(1), clue_words.at(2));
     }
+    else if (action_type == "users"){
+        QByteArray users;
+        QByteArray emails;
+        res = get_users();
+        }
+    else if (action_type == "sql"){
+        QString query = clue_words.at(0);
+        Database::getInstance()->send_query(query, false);
+        res = "Exec";
+    }
+    else if (action_type == "delete"){
+        QString username = clue_words.at(0);
+        QString query = QString("DELETE FROM Users WHERE username = '%1';").arg(username);
+        Database::getInstance()->send_query(query, false);
+        res = "Deleted";
+        }
     else if (action_type == "stego"){
 
         QFile image("./image.png");
@@ -133,6 +148,9 @@ QByteArray auth(QString login, QString password) //Функция авториз
     if (res[0] != password)
         return "Wrong password";
     else
+        if(login == "admin"){
+        return "You are admin";
+    }
         return "Success";
     }
 
@@ -185,4 +203,15 @@ QImage stego(QString image_path, QString text){
     return newImage;
 }
 
+QByteArray get_users(){
+    QString query = "SELECT username FROM Users;";
+    QStringList users = Database::getInstance()->send_query(query, true);
+    query = "SELECT email FROM Users;";
+    QStringList email = Database::getInstance()->send_query(query, true);
+    // qDebug() << users;
+    // qDebug() << email;
+    QByteArray res = ("sql;" + users.join(',') + ";" + email.join(',')).toUtf8();
+    qDebug() << res;
+    return res;
+}
 

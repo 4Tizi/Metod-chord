@@ -47,7 +47,7 @@ Database* Database::p_instance = 0;
         // Создание таблицы пользователей при инициализации объекта
         if (m_database.open()) {
             QSqlQuery query(m_database);
-            if (!query.exec("CREATE TABLE IF NOT EXISTS Users (username TEXT PRIMARY KEY, password TEXT, email TEXT)")) {
+            if (!query.exec("CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, email TEXT)")) {
                 qDebug() << "Failed to create table:" << query.lastError();
             }
         }
